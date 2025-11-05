@@ -2,6 +2,10 @@ namespace MudFieldsKeyboard.Components;
 
 public class KeyboardService
 {
+    private static readonly KeyboardService _instance = new();
+    
+    public static KeyboardService Instance => _instance;
+    
     private object? _activeField;
     private KeyboardLayout _currentLayout = KeyboardLayout.Text;
     private bool _allowDecimal = false;

@@ -1,48 +1,72 @@
-@inject KeyboardService KeyboardService
 @implements IDisposable
 
-<VirtualKeyboard IsVisible="KeyboardService.IsVisible"
-                 CurrentLayout="KeyboardService.CurrentLayout"
+<VirtualKeyboard IsVisible="@_isVisible"
+                 CurrentLayout="@_currentLayout"
                  AllowNegative="true"
-                 AllowDecimal="KeyboardService.AllowDecimal"
+                 AllowDecimal="@_allowDecimal"
                  OnKeyPressed="HandleKeyPressed"
                  OnBackspacePressed="HandleBackspacePressed"
                  OnClearPressed="HandleClearPressed"
                  OnClosePressed="HandleClosePressed" />
 
 @code {
-    protected override void OnInitialized()
-    {
-        KeyboardService.OnStateChanged += HandleStateChanged;
-    }
+    private bool _isVisible;
+    private KeyboardLayout _currentLayout;
+    private bool _allowDecimal;
+    private System.Threading.Timer? _timer;
 
-    private void HandleStateChanged()
+    protected override void OnAfterRender(bool firstRender)
     {
-        InvokeAsync(StateHasChanged);
+        if (firstRender)
+        {
+            // Poll the service state every 100ms to keep in sync
+            _timer = new System.Threading.Timer(_ => {
+                var changed = false;
+                if (_isVisible != KeyboardService.Instance.IsVisible)
+                {
+                    _isVisible = KeyboardService.Instance.IsVisible;
+                    changed = true;
+                }
+                if (_currentLayout != KeyboardService.Instance.CurrentLayout)
+                {
+                    _currentLayout = KeyboardService.Instance.CurrentLayout;
+                    changed = true;
+                }
+                if (_allowDecimal != KeyboardService.Instance.AllowDecimal)
+                {
+                    _allowDecimal = KeyboardService.Instance.AllowDecimal;
+                    changed = true;
+                }
+                if (changed)
+                {
+                    InvokeAsync(StateHasChanged);
+                }
+            }, null, 100, 100);
+        }
     }
 
     private void HandleKeyPressed(char key)
     {
-        KeyboardService.HandleKeyPress(key);
+        KeyboardService.Instance.HandleKeyPress(key);
     }
 
     private void HandleBackspacePressed()
     {
-        KeyboardService.HandleBackspace();
+        KeyboardService.Instance.HandleBackspace();
     }
 
     private void HandleClearPressed()
     {
-        KeyboardService.HandleClear();
+        KeyboardService.Instance.HandleClear();
     }
 
     private void HandleClosePressed()
     {
-        KeyboardService.HideKeyboard();
+        KeyboardService.Instance.HideKeyboard();
     }
 
     public void Dispose()
     {
-        KeyboardService.OnStateChanged -= HandleStateChanged;
+        _timer?.Dispose();
     }
 }
