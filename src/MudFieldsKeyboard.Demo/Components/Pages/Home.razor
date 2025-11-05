@@ -1,0 +1,95 @@
+﻿@page "/"
+@using MudFieldsKeyboard.Components
+
+<PageTitle>Virtual Keyboard Demo</PageTitle>
+
+<div class="demo-container">
+    <h1>MudFieldsKeyboard Demo</h1>
+    
+    <div class="demo-section">
+        <h2>Text Field</h2>
+        <NumericField @bind-Value="textValue" 
+                      FieldType="NumericFieldType.Text"
+                      Placeholder="Enter text"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Text))" />
+        <p>Value: @textValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Integer Field</h2>
+        <NumericField @bind-Value="intValue" 
+                      FieldType="NumericFieldType.Integer"
+                      Placeholder="Enter integer"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Integer))" />
+        <p>Value: @intValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Integer Field</h2>
+        <NumericField @bind-Value="nullableIntValue" 
+                      FieldType="NumericFieldType.Integer"
+                      Placeholder="Enter nullable integer"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Integer))" />
+        <p>Value: @(nullableIntValue?.ToString() ?? "null")</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Decimal Field</h2>
+        <NumericField @bind-Value="decimalValue" 
+                      FieldType="NumericFieldType.Decimal"
+                      Placeholder="Enter decimal"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Numeric))" />
+        <p>Value: @decimalValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Decimal Field</h2>
+        <NumericField @bind-Value="nullableDecimalValue" 
+                      FieldType="NumericFieldType.Decimal"
+                      Placeholder="Enter nullable decimal"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Numeric))" />
+        <p>Value: @(nullableDecimalValue?.ToString() ?? "null")</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Double Field</h2>
+        <NumericField @bind-Value="doubleValue" 
+                      FieldType="NumericFieldType.Double"
+                      Placeholder="Enter double"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Numeric))" />
+        <p>Value: @doubleValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Double Field</h2>
+        <NumericField @bind-Value="nullableDoubleValue" 
+                      FieldType="NumericFieldType.Double"
+                      Placeholder="Enter nullable double"
+                      OnFocus="@(() => SetKeyboardLayout(KeyboardLayout.Numeric))" />
+        <p>Value: @(nullableDoubleValue?.ToString() ?? "null")</p>
+    </div>
+</div>
+
+<VirtualKeyboard IsVisible="true" 
+                 CurrentLayout="currentLayout"
+                 AllowNegative="true"
+                 AllowDecimal="allowDecimal" />
+
+@code {
+    private string? textValue;
+    private int intValue;
+    private int? nullableIntValue;
+    private decimal decimalValue;
+    private decimal? nullableDecimalValue;
+    private double doubleValue;
+    private double? nullableDoubleValue;
+
+    private KeyboardLayout currentLayout = KeyboardLayout.Text;
+    private bool allowDecimal = false;
+
+    private void SetKeyboardLayout(KeyboardLayout layout)
+    {
+        currentLayout = layout;
+        allowDecimal = layout == KeyboardLayout.Numeric;
+    }
+}

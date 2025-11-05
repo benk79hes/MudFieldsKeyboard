@@ -1,0 +1,27 @@
+.numeric-field {
+    margin: 10px 0;
+}
+
+.numeric-field-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.numeric-field-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.numeric-field-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.numeric-field-input:read-only {
+    background-color: #fafafa;
+}
