@@ -1,0 +1,218 @@
+﻿@page "/"
+@using MudFieldsKeyboard.Components
+@rendermode InteractiveServer
+
+<PageTitle>Virtual Keyboard Demo</PageTitle>
+
+<div class="demo-container">
+    <h1>MudFieldsKeyboard Demo</h1>
+    
+    <div class="demo-section">
+        <h2>Text Field</h2>
+        <NumericField @ref="textField" 
+                      @bind-Value="textValue" 
+                      FieldType="NumericFieldType.Text"
+                      Placeholder="Enter text"
+                      OnFocus="EventCallback.Factory.Create<NumericField<string>>(this, HandleTextFieldFocus)" />
+        <p>Value: @textValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Integer Field</h2>
+        <NumericField @ref="intField" 
+                      @bind-Value="intValue" 
+                      FieldType="NumericFieldType.Integer"
+                      Placeholder="Enter integer"
+                      OnFocus="EventCallback.Factory.Create<NumericField<int>>(this, HandleIntFieldFocus)" />
+        <p>Value: @intValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Integer Field</h2>
+        <NumericField @ref="nullableIntField" 
+                      @bind-Value="nullableIntValue" 
+                      FieldType="NumericFieldType.Integer"
+                      Placeholder="Enter nullable integer"
+                      OnFocus="EventCallback.Factory.Create<NumericField<int?>>(this, HandleNullableIntFieldFocus)" />
+        <p>Value: @(nullableIntValue?.ToString() ?? "null")</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Decimal Field</h2>
+        <NumericField @ref="decimalField" 
+                      @bind-Value="decimalValue" 
+                      FieldType="NumericFieldType.Decimal"
+                      Placeholder="Enter decimal"
+                      OnFocus="EventCallback.Factory.Create<NumericField<decimal>>(this, HandleDecimalFieldFocus)" />
+        <p>Value: @decimalValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Decimal Field</h2>
+        <NumericField @ref="nullableDecimalField" 
+                      @bind-Value="nullableDecimalValue" 
+                      FieldType="NumericFieldType.Decimal"
+                      Placeholder="Enter nullable decimal"
+                      OnFocus="EventCallback.Factory.Create<NumericField<decimal?>>(this, HandleNullableDecimalFieldFocus)" />
+        <p>Value: @(nullableDecimalValue?.ToString() ?? "null")</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Double Field</h2>
+        <NumericField @ref="doubleField" 
+                      @bind-Value="doubleValue" 
+                      FieldType="NumericFieldType.Double"
+                      Placeholder="Enter double"
+                      OnFocus="EventCallback.Factory.Create<NumericField<double>>(this, HandleDoubleFieldFocus)" />
+        <p>Value: @doubleValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Nullable Double Field</h2>
+        <NumericField @ref="nullableDoubleField" 
+                      @bind-Value="nullableDoubleValue" 
+                      FieldType="NumericFieldType.Double"
+                      Placeholder="Enter nullable double"
+                      OnFocus="EventCallback.Factory.Create<NumericField<double?>>(this, HandleNullableDoubleFieldFocus)" />
+        <p>Value: @(nullableDoubleValue?.ToString() ?? "null")</p>
+    </div>
+</div>
+
+<VirtualKeyboard IsVisible="true" 
+                 CurrentLayout="currentLayout"
+                 AllowNegative="true"
+                 AllowDecimal="allowDecimal"
+                 OnKeyPressed="HandleKeyPressed"
+                 OnBackspacePressed="HandleBackspacePressed"
+                 OnClearPressed="HandleClearPressed" />
+
+@code {
+    private string? textValue;
+    private int intValue;
+    private int? nullableIntValue;
+    private decimal decimalValue;
+    private decimal? nullableDecimalValue;
+    private double doubleValue;
+    private double? nullableDoubleValue;
+
+    private NumericField<string>? textField;
+    private NumericField<int>? intField;
+    private NumericField<int?>? nullableIntField;
+    private NumericField<decimal>? decimalField;
+    private NumericField<decimal?>? nullableDecimalField;
+    private NumericField<double>? doubleField;
+    private NumericField<double?>? nullableDoubleField;
+
+    private object? activeField;
+    private KeyboardLayout currentLayout = KeyboardLayout.Text;
+    private bool allowDecimal = false;
+
+    private void HandleTextFieldFocus(NumericField<string> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Text;
+        allowDecimal = false;
+    }
+
+    private void HandleIntFieldFocus(NumericField<int> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Integer;
+        allowDecimal = false;
+    }
+
+    private void HandleNullableIntFieldFocus(NumericField<int?> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Integer;
+        allowDecimal = false;
+    }
+
+    private void HandleDecimalFieldFocus(NumericField<decimal> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Numeric;
+        allowDecimal = true;
+    }
+
+    private void HandleNullableDecimalFieldFocus(NumericField<decimal?> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Numeric;
+        allowDecimal = true;
+    }
+
+    private void HandleDoubleFieldFocus(NumericField<double> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Numeric;
+        allowDecimal = true;
+    }
+
+    private void HandleNullableDoubleFieldFocus(NumericField<double?> field)
+    {
+        activeField = field;
+        currentLayout = KeyboardLayout.Numeric;
+        allowDecimal = true;
+    }
+
+    private void HandleKeyPressed(char key)
+    {
+        if (activeField == null) return;
+
+        if (activeField == textField)
+            textField?.AppendCharacter(key);
+        else if (activeField == intField)
+            intField?.AppendCharacter(key);
+        else if (activeField == nullableIntField)
+            nullableIntField?.AppendCharacter(key);
+        else if (activeField == decimalField)
+            decimalField?.AppendCharacter(key);
+        else if (activeField == nullableDecimalField)
+            nullableDecimalField?.AppendCharacter(key);
+        else if (activeField == doubleField)
+            doubleField?.AppendCharacter(key);
+        else if (activeField == nullableDoubleField)
+            nullableDoubleField?.AppendCharacter(key);
+    }
+
+    private void HandleBackspacePressed()
+    {
+        if (activeField == null) return;
+
+        if (activeField == textField)
+            textField?.Backspace();
+        else if (activeField == intField)
+            intField?.Backspace();
+        else if (activeField == nullableIntField)
+            nullableIntField?.Backspace();
+        else if (activeField == decimalField)
+            decimalField?.Backspace();
+        else if (activeField == nullableDecimalField)
+            nullableDecimalField?.Backspace();
+        else if (activeField == doubleField)
+            doubleField?.Backspace();
+        else if (activeField == nullableDoubleField)
+            nullableDoubleField?.Backspace();
+    }
+
+    private void HandleClearPressed()
+    {
+        if (activeField == null) return;
+
+        if (activeField == textField)
+            textField?.Clear();
+        else if (activeField == intField)
+            intField?.Clear();
+        else if (activeField == nullableIntField)
+            nullableIntField?.Clear();
+        else if (activeField == decimalField)
+            decimalField?.Clear();
+        else if (activeField == nullableDecimalField)
+            nullableDecimalField?.Clear();
+        else if (activeField == doubleField)
+            doubleField?.Clear();
+        else if (activeField == nullableDoubleField)
+            nullableDoubleField?.Clear();
+    }
+}

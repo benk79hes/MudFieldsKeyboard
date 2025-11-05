@@ -1,0 +1,25 @@
+.demo-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 350px; /* Space for keyboard */
+}
+
+.demo-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.demo-section h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.demo-section p {
+    margin: 10px 0 0 0;
+    color: #666;
+    font-family: monospace;
+}

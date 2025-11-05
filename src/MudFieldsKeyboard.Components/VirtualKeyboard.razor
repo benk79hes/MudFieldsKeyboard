@@ -1,0 +1,158 @@
+@using System.Text
+
+<div class="virtual-keyboard @(IsVisible ? "visible" : "hidden")">
+    <div class="keyboard-layout">
+        @if (CurrentLayout == KeyboardLayout.Numeric)
+        {
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('7')">7</button>
+                <button class="key" @onclick="() => OnKeyPress('8')">8</button>
+                <button class="key" @onclick="() => OnKeyPress('9')">9</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('4')">4</button>
+                <button class="key" @onclick="() => OnKeyPress('5')">5</button>
+                <button class="key" @onclick="() => OnKeyPress('6')">6</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('1')">1</button>
+                <button class="key" @onclick="() => OnKeyPress('2')">2</button>
+                <button class="key" @onclick="() => OnKeyPress('3')">3</button>
+            </div>
+            <div class="keyboard-row">
+                @if (AllowNegative)
+                {
+                    <button class="key" @onclick="() => OnKeyPress('-')">-</button>
+                }
+                <button class="key" @onclick="() => OnKeyPress('0')">0</button>
+                @if (AllowDecimal)
+                {
+                    <button class="key" @onclick="() => OnKeyPress('.')">.</button>
+                }
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-action" @onclick="OnBackspace">⌫</button>
+                <button class="key key-action" @onclick="OnClear">Clear</button>
+            </div>
+        }
+        else if (CurrentLayout == KeyboardLayout.Integer)
+        {
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('7')">7</button>
+                <button class="key" @onclick="() => OnKeyPress('8')">8</button>
+                <button class="key" @onclick="() => OnKeyPress('9')">9</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('4')">4</button>
+                <button class="key" @onclick="() => OnKeyPress('5')">5</button>
+                <button class="key" @onclick="() => OnKeyPress('6')">6</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('1')">1</button>
+                <button class="key" @onclick="() => OnKeyPress('2')">2</button>
+                <button class="key" @onclick="() => OnKeyPress('3')">3</button>
+            </div>
+            <div class="keyboard-row">
+                @if (AllowNegative)
+                {
+                    <button class="key" @onclick="() => OnKeyPress('-')">-</button>
+                }
+                <button class="key" @onclick="() => OnKeyPress('0')">0</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-action" @onclick="OnBackspace">⌫</button>
+                <button class="key key-action" @onclick="OnClear">Clear</button>
+            </div>
+        }
+        else
+        {
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('1')">1</button>
+                <button class="key" @onclick="() => OnKeyPress('2')">2</button>
+                <button class="key" @onclick="() => OnKeyPress('3')">3</button>
+                <button class="key" @onclick="() => OnKeyPress('4')">4</button>
+                <button class="key" @onclick="() => OnKeyPress('5')">5</button>
+                <button class="key" @onclick="() => OnKeyPress('6')">6</button>
+                <button class="key" @onclick="() => OnKeyPress('7')">7</button>
+                <button class="key" @onclick="() => OnKeyPress('8')">8</button>
+                <button class="key" @onclick="() => OnKeyPress('9')">9</button>
+                <button class="key" @onclick="() => OnKeyPress('0')">0</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('q')">q</button>
+                <button class="key" @onclick="() => OnKeyPress('w')">w</button>
+                <button class="key" @onclick="() => OnKeyPress('e')">e</button>
+                <button class="key" @onclick="() => OnKeyPress('r')">r</button>
+                <button class="key" @onclick="() => OnKeyPress('t')">t</button>
+                <button class="key" @onclick="() => OnKeyPress('y')">y</button>
+                <button class="key" @onclick="() => OnKeyPress('u')">u</button>
+                <button class="key" @onclick="() => OnKeyPress('i')">i</button>
+                <button class="key" @onclick="() => OnKeyPress('o')">o</button>
+                <button class="key" @onclick="() => OnKeyPress('p')">p</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('a')">a</button>
+                <button class="key" @onclick="() => OnKeyPress('s')">s</button>
+                <button class="key" @onclick="() => OnKeyPress('d')">d</button>
+                <button class="key" @onclick="() => OnKeyPress('f')">f</button>
+                <button class="key" @onclick="() => OnKeyPress('g')">g</button>
+                <button class="key" @onclick="() => OnKeyPress('h')">h</button>
+                <button class="key" @onclick="() => OnKeyPress('j')">j</button>
+                <button class="key" @onclick="() => OnKeyPress('k')">k</button>
+                <button class="key" @onclick="() => OnKeyPress('l')">l</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" @onclick="() => OnKeyPress('z')">z</button>
+                <button class="key" @onclick="() => OnKeyPress('x')">x</button>
+                <button class="key" @onclick="() => OnKeyPress('c')">c</button>
+                <button class="key" @onclick="() => OnKeyPress('v')">v</button>
+                <button class="key" @onclick="() => OnKeyPress('b')">b</button>
+                <button class="key" @onclick="() => OnKeyPress('n')">n</button>
+                <button class="key" @onclick="() => OnKeyPress('m')">m</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-space" @onclick="() => OnKeyPress(' ')">Space</button>
+                <button class="key key-action" @onclick="OnBackspace">⌫</button>
+                <button class="key key-action" @onclick="OnClear">Clear</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    [Parameter]
+    public KeyboardLayout CurrentLayout { get; set; } = KeyboardLayout.Text;
+
+    [Parameter]
+    public bool AllowNegative { get; set; } = true;
+
+    [Parameter]
+    public bool AllowDecimal { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<char> OnKeyPressed { get; set; }
+
+    [Parameter]
+    public EventCallback OnBackspacePressed { get; set; }
+
+    [Parameter]
+    public EventCallback OnClearPressed { get; set; }
+
+    private async Task OnKeyPress(char key)
+    {
+        await OnKeyPressed.InvokeAsync(key);
+    }
+
+    private async Task OnBackspace()
+    {
+        await OnBackspacePressed.InvokeAsync();
+    }
+
+    private async Task OnClear()
+    {
+        await OnClearPressed.InvokeAsync();
+    }
+}
