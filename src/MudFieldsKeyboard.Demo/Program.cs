@@ -1,10 +1,14 @@
 using MudFieldsKeyboard.Demo.Components;
+using MudFieldsKeyboard.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Register the KeyboardService as a scoped service
+builder.Services.AddScoped<KeyboardService>();
 
 var app = builder.Build();
 

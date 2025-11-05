@@ -1,0 +1,58 @@
+namespace MudFieldsKeyboard.Components;
+
+public class KeyboardService
+{
+    private object? _activeField;
+    private KeyboardLayout _currentLayout = KeyboardLayout.Text;
+    private bool _allowDecimal = false;
+    private bool _isVisible = false;
+
+    public event Action? OnStateChanged;
+
+    public bool IsVisible => _isVisible;
+    public KeyboardLayout CurrentLayout => _currentLayout;
+    public bool AllowDecimal => _allowDecimal;
+
+    public void RegisterField(object field, KeyboardLayout layout, bool allowDecimal)
+    {
+        _activeField = field;
+        _currentLayout = layout;
+        _allowDecimal = allowDecimal;
+        _isVisible = true;
+        NotifyStateChanged();
+    }
+
+    public void HideKeyboard()
+    {
+        _isVisible = false;
+        _activeField = null;
+        NotifyStateChanged();
+    }
+
+    public void HandleKeyPress(char key)
+    {
+        if (_activeField == null) return;
+
+        // Use reflection to call AppendCharacter on the active field
+        var method = _activeField.GetType().GetMethod("AppendCharacter");
+        method?.Invoke(_activeField, new object[] { key });
+    }
+
+    public void HandleBackspace()
+    {
+        if (_activeField == null) return;
+
+        var method = _activeField.GetType().GetMethod("Backspace");
+        method?.Invoke(_activeField, null);
+    }
+
+    public void HandleClear()
+    {
+        if (_activeField == null) return;
+
+        var method = _activeField.GetType().GetMethod("Clear");
+        method?.Invoke(_activeField, null);
+    }
+
+    private void NotifyStateChanged() => OnStateChanged?.Invoke();
+}

@@ -1,6 +1,7 @@
 @typeparam T
 @using System.Globalization
 @using System.Text
+@inject KeyboardService? KeyboardService
 
 <div class="numeric-field">
     <input type="text" 
@@ -41,6 +42,9 @@
 
     [Parameter]
     public NumericFieldType FieldType { get; set; }
+
+    [Parameter]
+    public bool UseKeyboardService { get; set; } = true;
 
     private string _inputText = string.Empty;
     private string inputText
@@ -147,7 +151,26 @@
 
     private async Task HandleFocus()
     {
+        // Register with keyboard service if enabled
+        if (UseKeyboardService && KeyboardService != null)
+        {
+            var layout = DetermineKeyboardLayout();
+            var allowDecimal = FieldType == NumericFieldType.Decimal || FieldType == NumericFieldType.Double;
+            KeyboardService.RegisterField(this, layout, allowDecimal);
+        }
+        
         await OnFocus.InvokeAsync(this);
+    }
+
+    private KeyboardLayout DetermineKeyboardLayout()
+    {
+        return FieldType switch
+        {
+            NumericFieldType.Integer => KeyboardLayout.Integer,
+            NumericFieldType.Decimal => KeyboardLayout.Numeric,
+            NumericFieldType.Double => KeyboardLayout.Numeric,
+            _ => KeyboardLayout.Text
+        };
     }
 
     private async Task HandleBlur()

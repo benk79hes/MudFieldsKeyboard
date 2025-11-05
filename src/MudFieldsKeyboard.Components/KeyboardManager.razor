@@ -1,0 +1,43 @@
+@inject KeyboardService KeyboardService
+@implements IDisposable
+
+<VirtualKeyboard IsVisible="KeyboardService.IsVisible"
+                 CurrentLayout="KeyboardService.CurrentLayout"
+                 AllowNegative="true"
+                 AllowDecimal="KeyboardService.AllowDecimal"
+                 OnKeyPressed="HandleKeyPressed"
+                 OnBackspacePressed="HandleBackspacePressed"
+                 OnClearPressed="HandleClearPressed"
+                 OnClosePressed="HandleClosePressed" />
+
+@code {
+    protected override void OnInitialized()
+    {
+        KeyboardService.OnStateChanged += StateHasChanged;
+    }
+
+    private void HandleKeyPressed(char key)
+    {
+        KeyboardService.HandleKeyPress(key);
+    }
+
+    private void HandleBackspacePressed()
+    {
+        KeyboardService.HandleBackspace();
+    }
+
+    private void HandleClearPressed()
+    {
+        KeyboardService.HandleClear();
+    }
+
+    private void HandleClosePressed()
+    {
+        KeyboardService.HideKeyboard();
+    }
+
+    public void Dispose()
+    {
+        KeyboardService.OnStateChanged -= StateHasChanged;
+    }
+}

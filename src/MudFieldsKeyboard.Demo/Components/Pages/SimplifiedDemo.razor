@@ -1,0 +1,49 @@
+@page "/simplified"
+@using MudFieldsKeyboard.Components
+@rendermode InteractiveServer
+
+<PageTitle>Simplified Keyboard Demo</PageTitle>
+
+<div class="demo-container">
+    <h1>Simplified Keyboard Demo</h1>
+    <p>This page demonstrates the simplified keyboard integration using the KeyboardService. No boilerplate code needed!</p>
+    
+    <div class="demo-section">
+        <h2>Text Field</h2>
+        <NumericField @bind-Value="textValue" 
+                      FieldType="NumericFieldType.Text"
+                      Placeholder="Enter text" />
+        <p>Value: @textValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Integer Field</h2>
+        <NumericField @bind-Value="intValue" 
+                      FieldType="NumericFieldType.Integer"
+                      Placeholder="Enter integer" />
+        <p>Value: @intValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Decimal Field</h2>
+        <NumericField @bind-Value="decimalValue" 
+                      FieldType="NumericFieldType.Decimal"
+                      Placeholder="Enter decimal" />
+        <p>Value: @decimalValue</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>Double Field</h2>
+        <NumericField @bind-Value="doubleValue" 
+                      FieldType="NumericFieldType.Double"
+                      Placeholder="Enter double" />
+        <p>Value: @doubleValue</p>
+    </div>
+</div>
+
+@code {
+    private string? textValue;
+    private int intValue;
+    private decimal decimalValue;
+    private double doubleValue;
+}
