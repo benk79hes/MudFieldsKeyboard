@@ -1,6 +1,9 @@
 @using System.Text
 
 <div class="virtual-keyboard @(IsVisible ? "visible" : "hidden")">
+    <div class="keyboard-header">
+        <button class="key key-close" @onclick="OnClose">✕</button>
+    </div>
     <div class="keyboard-layout">
         @if (CurrentLayout == KeyboardLayout.Numeric)
         {
@@ -141,6 +144,9 @@
     [Parameter]
     public EventCallback OnClearPressed { get; set; }
 
+    [Parameter]
+    public EventCallback OnClosePressed { get; set; }
+
     private async Task OnKeyPress(char key)
     {
         await OnKeyPressed.InvokeAsync(key);
@@ -154,5 +160,10 @@
     private async Task OnClear()
     {
         await OnClearPressed.InvokeAsync();
+    }
+
+    private async Task OnClose()
+    {
+        await OnClosePressed.InvokeAsync();
     }
 }

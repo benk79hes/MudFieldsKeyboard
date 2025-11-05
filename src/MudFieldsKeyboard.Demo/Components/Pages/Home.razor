@@ -78,13 +78,14 @@
     </div>
 </div>
 
-<VirtualKeyboard IsVisible="true" 
+<VirtualKeyboard IsVisible="isKeyboardVisible" 
                  CurrentLayout="currentLayout"
                  AllowNegative="true"
                  AllowDecimal="allowDecimal"
                  OnKeyPressed="HandleKeyPressed"
                  OnBackspacePressed="HandleBackspacePressed"
-                 OnClearPressed="HandleClearPressed" />
+                 OnClearPressed="HandleClearPressed"
+                 OnClosePressed="HandleClosePressed" />
 
 @code {
     private string? textValue;
@@ -106,12 +107,14 @@
     private object? activeField;
     private KeyboardLayout currentLayout = KeyboardLayout.Text;
     private bool allowDecimal = false;
+    private bool isKeyboardVisible = false;
 
     private void HandleTextFieldFocus(NumericField<string> field)
     {
         activeField = field;
         currentLayout = KeyboardLayout.Text;
         allowDecimal = false;
+        isKeyboardVisible = true;
     }
 
     private void HandleIntFieldFocus(NumericField<int> field)
@@ -119,6 +122,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Integer;
         allowDecimal = false;
+        isKeyboardVisible = true;
     }
 
     private void HandleNullableIntFieldFocus(NumericField<int?> field)
@@ -126,6 +130,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Integer;
         allowDecimal = false;
+        isKeyboardVisible = true;
     }
 
     private void HandleDecimalFieldFocus(NumericField<decimal> field)
@@ -133,6 +138,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Numeric;
         allowDecimal = true;
+        isKeyboardVisible = true;
     }
 
     private void HandleNullableDecimalFieldFocus(NumericField<decimal?> field)
@@ -140,6 +146,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Numeric;
         allowDecimal = true;
+        isKeyboardVisible = true;
     }
 
     private void HandleDoubleFieldFocus(NumericField<double> field)
@@ -147,6 +154,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Numeric;
         allowDecimal = true;
+        isKeyboardVisible = true;
     }
 
     private void HandleNullableDoubleFieldFocus(NumericField<double?> field)
@@ -154,6 +162,7 @@
         activeField = field;
         currentLayout = KeyboardLayout.Numeric;
         allowDecimal = true;
+        isKeyboardVisible = true;
     }
 
     private void HandleKeyPressed(char key)
@@ -214,5 +223,11 @@
             doubleField?.Clear();
         else if (activeField == nullableDoubleField)
             nullableDoubleField?.Clear();
+    }
+
+    private void HandleClosePressed()
+    {
+        isKeyboardVisible = false;
+        activeField = null;
     }
 }
