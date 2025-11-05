@@ -1,11 +1,12 @@
 @typeparam T
 @using System.Globalization
+@using System.Text
 
 <div class="numeric-field">
     <input type="text" 
            class="@CssClass" 
-           value="@CurrentValueAsString" 
-           @oninput="HandleInput"
+           @bind-value="inputText"
+           @bind-value:event="oninput"
            @onfocus="HandleFocus"
            @onblur="HandleBlur"
            placeholder="@Placeholder"
@@ -33,33 +34,66 @@
     public string CssClass { get; set; } = "numeric-field-input";
 
     [Parameter]
-    public EventCallback<FocusEventArgs> OnFocus { get; set; }
+    public EventCallback<NumericField<T>> OnFocus { get; set; }
 
     [Parameter]
-    public EventCallback<FocusEventArgs> OnBlur { get; set; }
+    public EventCallback<NumericField<T>> OnBlur { get; set; }
 
     [Parameter]
     public NumericFieldType FieldType { get; set; }
 
-    private string CurrentValueAsString
-    {
-        get
-        {
-            if (Value == null)
-                return string.Empty;
+    private string inputText = string.Empty;
+    private bool isInitialized = false;
 
-            return Value.ToString() ?? string.Empty;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Value != null)
+        {
+            inputText = Value.ToString() ?? string.Empty;
+        }
+        isInitialized = true;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (isInitialized && Value != null && Value.ToString() != inputText)
+        {
+            inputText = Value.ToString() ?? string.Empty;
         }
     }
 
-    private async Task HandleInput(ChangeEventArgs e)
+    public void AppendCharacter(char c)
     {
-        var input = e.Value?.ToString() ?? string.Empty;
-        
-        if (string.IsNullOrWhiteSpace(input))
+        inputText += c;
+        ParseAndUpdateValue();
+        StateHasChanged();
+    }
+
+    public void Backspace()
+    {
+        if (inputText.Length > 0)
+        {
+            inputText = inputText.Substring(0, inputText.Length - 1);
+            ParseAndUpdateValue();
+            StateHasChanged();
+        }
+    }
+
+    public void Clear()
+    {
+        inputText = string.Empty;
+        ParseAndUpdateValue();
+        StateHasChanged();
+    }
+
+    private void ParseAndUpdateValue()
+    {
+        if (string.IsNullOrWhiteSpace(inputText))
         {
             Value = default(T);
-            await ValueChanged.InvokeAsync(Value);
+            ValueChanged.InvokeAsync(Value);
             return;
         }
 
@@ -72,43 +106,43 @@
 
             if (underlyingType == typeof(int))
             {
-                if (int.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
+                if (int.TryParse(inputText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                     parsedValue = intValue;
             }
             else if (underlyingType == typeof(decimal))
             {
-                if (decimal.TryParse(input, NumberStyles.Number, CultureInfo.InvariantCulture, out var decimalValue))
+                if (decimal.TryParse(inputText, NumberStyles.Number, CultureInfo.InvariantCulture, out var decimalValue))
                     parsedValue = decimalValue;
             }
             else if (underlyingType == typeof(double))
             {
-                if (double.TryParse(input, NumberStyles.Number, CultureInfo.InvariantCulture, out var doubleValue))
+                if (double.TryParse(inputText, NumberStyles.Number, CultureInfo.InvariantCulture, out var doubleValue))
                     parsedValue = doubleValue;
             }
             else if (underlyingType == typeof(string))
             {
-                parsedValue = input;
+                parsedValue = inputText;
             }
 
             if (parsedValue != null)
             {
                 Value = (T?)parsedValue;
-                await ValueChanged.InvokeAsync(Value);
+                ValueChanged.InvokeAsync(Value);
             }
         }
         catch
         {
-            // If parsing fails, don't update the value
+            // If parsing fails, keep the text but don't update the value
         }
     }
 
-    private async Task HandleFocus(FocusEventArgs e)
+    private async Task HandleFocus()
     {
-        await OnFocus.InvokeAsync(e);
+        await OnFocus.InvokeAsync(this);
     }
 
-    private async Task HandleBlur(FocusEventArgs e)
+    private async Task HandleBlur()
     {
-        await OnBlur.InvokeAsync(e);
+        await OnBlur.InvokeAsync(this);
     }
 }
