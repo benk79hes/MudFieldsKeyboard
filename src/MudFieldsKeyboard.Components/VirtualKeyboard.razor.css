@@ -18,6 +18,36 @@
     transform: translateY(100%);
 }
 
+.keyboard-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+}
+
+.key-close {
+    background-color: #d9534f;
+    color: #fff;
+    border: 1px solid #d43f3a;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 40px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.key-close:hover {
+    background-color: #c9302c;
+}
+
+.key-close:active {
+    background-color: #ac2925;
+}
+
 .keyboard-layout {
     display: flex;
     flex-direction: column;
