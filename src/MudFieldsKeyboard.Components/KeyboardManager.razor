@@ -13,7 +13,12 @@
 @code {
     protected override void OnInitialized()
     {
-        KeyboardService.OnStateChanged += StateHasChanged;
+        KeyboardService.OnStateChanged += HandleStateChanged;
+    }
+
+    private void HandleStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     private void HandleKeyPressed(char key)
@@ -38,6 +43,6 @@
 
     public void Dispose()
     {
-        KeyboardService.OnStateChanged -= StateHasChanged;
+        KeyboardService.OnStateChanged -= HandleStateChanged;
     }
 }
