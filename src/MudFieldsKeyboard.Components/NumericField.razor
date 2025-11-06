@@ -147,7 +147,23 @@
 
     private async Task HandleFocus()
     {
+        // Always register with keyboard service
+        var layout = DetermineKeyboardLayout();
+        var allowDecimal = FieldType == NumericFieldType.Decimal || FieldType == NumericFieldType.Double;
+        KeyboardService.Instance.RegisterField(this, layout, allowDecimal);
+        
         await OnFocus.InvokeAsync(this);
+    }
+
+    private KeyboardLayout DetermineKeyboardLayout()
+    {
+        return FieldType switch
+        {
+            NumericFieldType.Integer => KeyboardLayout.Integer,
+            NumericFieldType.Decimal => KeyboardLayout.Numeric,
+            NumericFieldType.Double => KeyboardLayout.Numeric,
+            _ => KeyboardLayout.Text
+        };
     }
 
     private async Task HandleBlur()

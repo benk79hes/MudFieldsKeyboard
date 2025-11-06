@@ -16,6 +16,8 @@ A Blazor component library providing a virtual keyboard and specialized numeric/
   - Numeric keypad for integer fields
   - Numeric keypad with decimal point for decimal/double fields
 
+- **🎯 NEW: Centralized Keyboard Management**: Use KeyboardService to place the keyboard once in your layout and reuse it across all pages with zero boilerplate code! See [KEYBOARD_REUSABILITY.md](KEYBOARD_REUSABILITY.md) for details.
+
 ## Project Structure
 
 - `src/MudFieldsKeyboard.Components`: The component library containing VirtualKeyboard and NumericField components
@@ -44,16 +46,48 @@ Then navigate to `http://localhost:5000` in your browser.
 
 ## Usage
 
-### Adding to Your Project
+### ⭐ Simplified Usage (Recommended)
 
-1. Add a reference to the `MudFieldsKeyboard.Components` project
-2. Add the namespace to your `_Imports.razor`:
+The easiest way to use the keyboard is with the KeyboardService pattern:
 
-```razor
-@using MudFieldsKeyboard.Components
+1. Register the service in `Program.cs`:
+```csharp
+builder.Services.AddScoped<KeyboardService>();
 ```
 
-3. Use the components in your Blazor pages:
+2. Add KeyboardManager to your `MainLayout.razor`:
+```razor
+@using MudFieldsKeyboard.Components
+
+<div class="page">
+    @Body
+</div>
+
+<KeyboardManager />
+```
+
+3. Use NumericField in any page (no keyboard management code needed!):
+```razor
+@page "/mypage"
+@using MudFieldsKeyboard.Components
+@rendermode InteractiveServer
+
+<NumericField @bind-Value="myValue" 
+              FieldType="NumericFieldType.Integer"
+              Placeholder="Enter a number" />
+
+@code {
+    private int myValue;
+}
+```
+
+That's it! The keyboard automatically appears when you focus a field and adapts to the field type.
+
+See [KEYBOARD_REUSABILITY.md](KEYBOARD_REUSABILITY.md) for complete details.
+
+### Manual Usage (Legacy)
+
+You can also manually manage the keyboard on each page:
 
 ```razor
 @page "/example"
