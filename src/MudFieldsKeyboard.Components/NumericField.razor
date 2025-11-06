@@ -99,6 +99,7 @@
         {
             Value = default(T);
             ValueChanged.InvokeAsync(Value);
+            StateHasChanged();
             return;
         }
 
@@ -111,20 +112,42 @@
 
             if (underlyingType == typeof(int))
             {
-                if (int.TryParse(inputText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
+                // Allow intermediate state for minus sign (e.g., "-" or "-.")
+                var textToParse = inputText.TrimEnd('.');
+                if (textToParse == "-")
+                {
+                    // Don't update value yet, but keep the text display
+                    StateHasChanged();
+                    return;
+                }
+                if (int.TryParse(textToParse, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                     parsedValue = intValue;
             }
             else if (underlyingType == typeof(decimal))
             {
                 // Allow parsing even with trailing decimal point (e.g., "12." should parse as 12)
+                // Also allow intermediate state for minus sign (e.g., "-" or "-.")
                 var textToParse = inputText.TrimEnd('.');
+                if (textToParse == "-")
+                {
+                    // Don't update value yet, but keep the text display
+                    StateHasChanged();
+                    return;
+                }
                 if (decimal.TryParse(textToParse, NumberStyles.Number, CultureInfo.InvariantCulture, out var decimalValue))
                     parsedValue = decimalValue;
             }
             else if (underlyingType == typeof(double))
             {
                 // Allow parsing even with trailing decimal point (e.g., "12." should parse as 12)
+                // Also allow intermediate state for minus sign (e.g., "-" or "-.")
                 var textToParse = inputText.TrimEnd('.');
+                if (textToParse == "-")
+                {
+                    // Don't update value yet, but keep the text display
+                    StateHasChanged();
+                    return;
+                }
                 if (double.TryParse(textToParse, NumberStyles.Number, CultureInfo.InvariantCulture, out var doubleValue))
                     parsedValue = doubleValue;
             }
@@ -137,6 +160,7 @@
             {
                 Value = (T?)parsedValue;
                 ValueChanged.InvokeAsync(Value);
+                StateHasChanged();
             }
         }
         catch
