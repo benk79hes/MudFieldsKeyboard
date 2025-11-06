@@ -1,3 +1,5 @@
+using Microsoft.JSInterop;
+
 namespace MudFieldsKeyboard.Components;
 
 public class KeyboardService
@@ -10,12 +12,18 @@ public class KeyboardService
     private KeyboardLayout _currentLayout = KeyboardLayout.Text;
     private bool _allowDecimal = false;
     private bool _isVisible = false;
+    private IJSRuntime? _jsRuntime;
 
     public event Action? OnStateChanged;
 
     public bool IsVisible => _isVisible;
     public KeyboardLayout CurrentLayout => _currentLayout;
     public bool AllowDecimal => _allowDecimal;
+
+    public void Initialize(IJSRuntime jsRuntime)
+    {
+        _jsRuntime = jsRuntime;
+    }
 
     public void RegisterField(object field, KeyboardLayout layout, bool allowDecimal)
     {
@@ -58,5 +66,26 @@ public class KeyboardService
         method?.Invoke(_activeField, null);
     }
 
-    private void NotifyStateChanged() => OnStateChanged?.Invoke();
+    private async void NotifyStateChanged()
+    {
+        OnStateChanged?.Invoke();
+        
+        // Also notify via JavaScript interop using the global keyboardState object
+        if (_jsRuntime != null)
+        {
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync(
+                    "keyboardState.notifyStateChanged",
+                    _isVisible,
+                    (int)_currentLayout,
+                    _allowDecimal
+                );
+            }
+            catch
+            {
+                // Ignore JS interop errors
+            }
+        }
+    }
 }
